@@ -1,0 +1,29 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "npx webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeonsChub/Battleship.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeonsChub/Battleship/issues"
+  },
+  "homepage": "https://github.com/LeonsChub/Battleship#readme",
+  "devDependencies": {
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
+    "babel-jest": "^29.0.1",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.23.0",
+    "jest": "^29.0.1",
+    "style-loader": "^3.3.1"
+  }
+}
