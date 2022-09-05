@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
-import { ship } from '../ship';
+import { Ship } from '../ship';
 
 test('Returns Ship as array', () => {
-  const ship1 = ship(3);
+  const ship1 = Ship(3);
   expect(ship1.getShip()).toStrictEqual([1, 1, 1]);
 });
 
 test('is Ship sunk?', () => {
-  const ship1 = ship(3);
+  const ship1 = Ship(3);
   expect(ship1.getSunk()).toBe(false);
 
   ship1.hit(0);
@@ -18,7 +18,7 @@ test('is Ship sunk?', () => {
 });
 
 test('can hit?', () => {
-  const ship1 = ship(5);
+  const ship1 = Ship(5);
   ship1.hit(3);
   expect(ship1.getShip()).toStrictEqual([1, 1, 1, 0, 1]);
 });
