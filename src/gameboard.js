@@ -127,7 +127,15 @@ const Gameboard = () => {
     });
     return allSunk;
   };
-  return { getBoard, getShips, placeShip, recieveHit, allShipsSunk, toString };
+  return {
+    getBoard,
+    getShips,
+    placeShip,
+    recieveHit,
+    allShipsSunk,
+    getCoordinate,
+    toString,
+  };
 };
 
 export { Gameboard };

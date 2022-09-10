@@ -22,6 +22,18 @@ const Ship = (length, o) => {
     return orientation;
   };
 
+  const ninteyDegrees = () => {
+    switch (orientation) {
+      case 'x':
+        orientation = 'y';
+        break;
+
+      case 'y':
+        orientation = 'x';
+        break;
+    }
+  };
+
   const hit = (n) => {
     if (n > length || n < 0) {
       return null;
@@ -29,7 +41,7 @@ const Ship = (length, o) => {
       shipArray[n] = 0;
     }
   };
-  return { getShip, getSunk, hit, getOrientation, getLen };
+  return { getShip, getSunk, hit, getOrientation, getLen, ninteyDegrees };
 };
 
 export { Ship };

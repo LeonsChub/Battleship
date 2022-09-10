@@ -135,3 +135,26 @@ test('does gameboard register a hit', () => {
   ]);
   expect(s1.getShip()).toStrictEqual([0, 1, 0]);
 });
+
+test('does gameboard register that all ships are sunk', () => {
+  let board = Gameboard();
+  let s1 = Ship(3, 'x');
+  let s2 = Ship(4, 'y');
+
+  board.placeShip([4, 4], s1);
+  board.placeShip([1, 0], s2);
+
+  board.recieveHit([4, 4]);
+  board.recieveHit([5, 4]);
+  board.recieveHit([6, 4]);
+
+  board.recieveHit([1, 0]);
+  board.recieveHit([1, 1]);
+  board.recieveHit([1, 2]);
+
+  expect(board.allShipsSunk()).toBe(false);
+
+  board.recieveHit([1, 3]);
+
+  expect(board.allShipsSunk()).toBe(true);
+});
