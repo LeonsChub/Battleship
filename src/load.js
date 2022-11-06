@@ -90,7 +90,7 @@ function populateBoard() {
   return playerBoard;
 }
 
-function boardToDom(board) {
+function boardToDom(board, drawShip = false) {
   const boardWrap = document.createElement('div');
   boardWrap.classList.add('board');
   for (let i = 0; i < 10; i++) {
@@ -99,7 +99,7 @@ function boardToDom(board) {
       const cell = document.createElement('div');
       cell.classList.add('cell');
 
-      if (cellVal === 1) {
+      if ((cellVal === 1) & drawShip) {
         cell.classList.add('ship');
       }
 
@@ -136,7 +136,7 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   playerName.textContent = humanPlayer.getName();
 
   playerColumn.appendChild(playerName);
-  playerColumn.appendChild(boardToDom(humanPlayer.getBoard()));
+  playerColumn.appendChild(boardToDom(humanPlayer.getBoard(), true));
 
   const cpuName = document.createElement('h1');
   cpuName.textContent = cpuPlayer.getName();
@@ -148,7 +148,7 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   playerSplitWrap.appendChild(cpuColumn);
 }
 
-function addListenerToCells(boardDom, name) {
+function addListenerToCells(boardDom, cpuPlayer, humanPlayer) {
   const child = boardDom[0].children;
   const manDOMain = document.getElementById('human-column');
   const cpuDOMain = document.getElementById('cpu-column');
@@ -164,7 +164,18 @@ function addListenerToCells(boardDom, name) {
         if (selfAttack) {
           alert('selfATTACK');
         } else {
-          updateIndicator(name);
+          if (tracker.getTurn() === 'H') {
+            humanPlayer.attackBoard([i, j], cpuPlayer.getBoard());
+            refreshDomBoard(boardDom, cpuPlayer.getBoard());
+
+            console.log(`cpu ATTACKED ${humanPlayer.getName()} on ${[i, j]}`);
+          }
+          if (tracker.getTurn() === 'C') {
+            refreshDomBoard(boardDom, humanPlayer.getBoard());
+            console.log(`${humanPlayer.getName()} ATTACKED cpu on ${[i, j]}`);
+          }
+
+          updateIndicator(humanPlayer.getName());
         }
       });
     }
@@ -182,6 +193,11 @@ function updateIndicator(name = 'Player 1') {
   tracker.nextTurn();
 }
 
+function refreshDomBoard(boardDom, playerBoard) {
+  console.log(boardDom);
+  console.log(playerBoard.toString());
+}
+
 function startGame(humanPlayer, cpuPlayer, playerName) {
   if (
     humanPlayer.getBoard().getShips().length === 5 &&
@@ -195,8 +211,8 @@ function startGame(humanPlayer, cpuPlayer, playerName) {
       .getElementById('cpu-column')
       .getElementsByClassName('board');
 
-    addListenerToCells(humanDomBoard, playerName);
-    addListenerToCells(cpuDomBoard, playerName);
+    addListenerToCells(humanDomBoard, cpuPlayer, humanPlayer);
+    addListenerToCells(cpuDomBoard, cpuPlayer, humanPlayer);
 
     updateIndicator(playerName);
   }
