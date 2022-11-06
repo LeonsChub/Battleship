@@ -48,7 +48,7 @@ function loadNamePrompt() {
       clearScreen();
       loadPlayArea(humanPlayer, cpuPlayer);
 
-      startGame(humanPlayer, cpuPlayer);
+      startGame(humanPlayer, cpuPlayer, nameInput.value);
     }
     e.preventDefault();
   });
@@ -148,61 +148,57 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   playerSplitWrap.appendChild(cpuColumn);
 }
 
-function addListenerToCells(player, boardDom) {
+function addListenerToCells(boardDom, name) {
   const child = boardDom[0].children;
+  const manDOMain = document.getElementById('human-column');
+  const cpuDOMain = document.getElementById('cpu-column');
 
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       child[i * 10 + j].addEventListener('click', () => {
-        console.log(tracker.getTurn());
+        let selfAttack =
+          (manDOMain.contains(child[i * 10 + j]) &&
+            tracker.getTurn() === 'C') ||
+          (cpuDOMain.contains(child[i * 10 + j]) && tracker.getTurn() === 'H');
+
+        if (selfAttack) {
+          alert('selfATTACK');
+        } else {
+          updateIndicator(name);
+        }
       });
     }
   }
 }
 
-function addTurnFollowListener(humanPlayer, cpuPlayer) {
-  const allCells = document.getElementsByClassName('cell');
+function updateIndicator(name = 'Player 1') {
   const turnIndicator = document.getElementById('turn-indicator');
-  console.log(tracker.getTurn());
-
   if (tracker.getTurn() === 'H') {
-    turnIndicator.textContent = humanPlayer.getName();
+    turnIndicator.textContent = name;
   } else {
     turnIndicator.textContent = 'CPU';
   }
 
-  for (let index = 0; index < allCells.length; index++) {
-    const cell = allCells[index];
-
-    cell.addEventListener('click', () => {
-      tracker.nextTurn();
-
-      if (tracker.getTurn() === 'H') {
-        turnIndicator.textContent = humanPlayer.getName();
-      } else {
-        turnIndicator.textContent = 'CPU';
-      }
-    });
-  }
-
-  const humanDomBoard = document
-    .getElementById('human-column')
-    .getElementsByClassName('board');
-
-  const cpuDomBoard = document
-    .getElementById('cpu-column')
-    .getElementsByClassName('board');
-
-  addListenerToCells(humanPlayer, humanDomBoard);
-  addListenerToCells(cpuPlayer, cpuDomBoard);
+  tracker.nextTurn();
 }
 
-function startGame(humanPlayer, cpuPlayer) {
+function startGame(humanPlayer, cpuPlayer, playerName) {
   if (
     humanPlayer.getBoard().getShips().length === 5 &&
     cpuPlayer.getBoard().getShips().length === 5
   ) {
-    addTurnFollowListener(humanPlayer, cpuPlayer);
+    const humanDomBoard = document
+      .getElementById('human-column')
+      .getElementsByClassName('board');
+
+    const cpuDomBoard = document
+      .getElementById('cpu-column')
+      .getElementsByClassName('board');
+
+    addListenerToCells(humanDomBoard, playerName);
+    addListenerToCells(cpuDomBoard, playerName);
+
+    updateIndicator(playerName);
   }
 }
 export { loadMainAssests };
