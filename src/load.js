@@ -112,6 +112,16 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   const playArea = document.createElement('div');
   playArea.id = 'play-area-wrap';
 
+  const turnHeading = document.createElement('h2');
+  turnHeading.innerHTML = '<span id = "turn-indicator">Leon</span>s Turn.';
+
+  playArea.appendChild(turnHeading);
+
+  const playerSplitWrap = document.createElement('div');
+  playerSplitWrap.classList.add('split');
+
+  playArea.appendChild(playerSplitWrap);
+
   const playerColumn = document.createElement('div');
   playerColumn.id = 'human-column';
 
@@ -132,8 +142,8 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   cpuColumn.appendChild(cpuName);
   cpuColumn.appendChild(boardToDom(cpuPlayer.getBoard()));
 
-  playArea.appendChild(playerColumn);
-  playArea.appendChild(cpuColumn);
+  playerSplitWrap.appendChild(playerColumn);
+  playerSplitWrap.appendChild(cpuColumn);
 }
 
 function addListenerToCells(player, boardDom) {
@@ -153,27 +163,43 @@ function addListenerToCells(player, boardDom) {
   }
 }
 
-function addTurnFollowListener(turn = 'H') {
+function addTurnFollowListener(turn = 'H', playerName) {
   const allCells = document.getElementsByClassName('cell');
-  console.log(allCells[0]);
+  const turnIndicator = document.getElementById('turn-indicator');
+
+  if (turn === 'H') {
+    turnIndicator.textContent = playerName;
+    turn = 'C';
+  } else {
+    turnIndicator.textContent = 'CPU';
+    turn = 'H';
+  }
+
   for (let index = 0; index < allCells.length; index++) {
     const cell = allCells[index];
+
     cell.addEventListener('click', () => {
-      if (turn === 'H') {
-        console.log('CPUs turn');
-        turn = 'C';
-      } else {
-        if (turn === 'C') {
-          console.log('Human turn');
+      switch (turn) {
+        case 'H':
+          turnIndicator.textContent = playerName;
+          turn = 'C';
+          break;
+
+        case 'C':
+          turnIndicator.textContent = 'CPU';
           turn = 'H';
-        }
+          break;
+
+        default:
+          break;
       }
     });
   }
 }
 
 function startGame(humanPlayer, cpuPlayer) {
-  let turn = 'H'; //H - human start. C - CPU start
+  addTurnFollowListener('H', humanPlayer.getName());
+
   if (
     humanPlayer.getBoard().getShips().length === 5 &&
     cpuPlayer.getBoard().getShips().length === 5
@@ -186,9 +212,8 @@ function startGame(humanPlayer, cpuPlayer) {
       .getElementById('cpu-column')
       .getElementsByClassName('board');
 
-    addTurnFollowListener();
-    addListenerToCells(humanPlayer, humanDomBoard, turn);
-    addListenerToCells(cpuPlayer, cpuDomBoard, turn);
+    addListenerToCells(humanPlayer, humanDomBoard);
+    addListenerToCells(cpuPlayer, cpuDomBoard);
   }
 }
 export { loadMainAssests };

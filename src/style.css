@@ -85,8 +85,15 @@ form{
   grid-template-rows: repeat(10, 1fr);
   gap: 0;
 }
-
 #play-area-wrap{
+	padding-top: 5vh;
+	display: flex;
+	flex-flow: column;
+
+	align-items: center;
+}
+
+#play-area-wrap > .split{
 	display: flex;
 	justify-content: space-between;
 
