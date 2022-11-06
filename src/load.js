@@ -1,8 +1,10 @@
 import { Player } from './player';
 import { Gameboard } from './gameboard';
 import { Ship } from './ship';
+import { TurnTracker } from './turnTracker';
 
 const anchorDiv = document.querySelector('#content');
+const tracker = TurnTracker('H');
 
 function loadMainAssests() {
   loadNamePrompt();
@@ -113,7 +115,7 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   playArea.id = 'play-area-wrap';
 
   const turnHeading = document.createElement('h2');
-  turnHeading.innerHTML = '<span id = "turn-indicator">Leon</span>s Turn.';
+  turnHeading.innerHTML = '<span id = "turn-indicator"></span>s Turn.';
 
   playArea.appendChild(turnHeading);
 
@@ -152,68 +154,55 @@ function addListenerToCells(player, boardDom) {
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       child[i * 10 + j].addEventListener('click', () => {
-        console.log(
-          player.getName(),
-          i,
-          j,
-          player.getBoard().getCoordinate([j, i])
-        );
+        console.log(tracker.getTurn());
       });
     }
   }
 }
 
-function addTurnFollowListener(turn = 'H', playerName) {
+function addTurnFollowListener(humanPlayer, cpuPlayer) {
   const allCells = document.getElementsByClassName('cell');
   const turnIndicator = document.getElementById('turn-indicator');
+  console.log(tracker.getTurn());
 
-  if (turn === 'H') {
-    turnIndicator.textContent = playerName;
-    turn = 'C';
+  if (tracker.getTurn() === 'H') {
+    turnIndicator.textContent = humanPlayer.getName();
   } else {
     turnIndicator.textContent = 'CPU';
-    turn = 'H';
   }
 
   for (let index = 0; index < allCells.length; index++) {
     const cell = allCells[index];
 
     cell.addEventListener('click', () => {
-      switch (turn) {
-        case 'H':
-          turnIndicator.textContent = playerName;
-          turn = 'C';
-          break;
+      tracker.nextTurn();
 
-        case 'C':
-          turnIndicator.textContent = 'CPU';
-          turn = 'H';
-          break;
-
-        default:
-          break;
+      if (tracker.getTurn() === 'H') {
+        turnIndicator.textContent = humanPlayer.getName();
+      } else {
+        turnIndicator.textContent = 'CPU';
       }
     });
   }
+
+  const humanDomBoard = document
+    .getElementById('human-column')
+    .getElementsByClassName('board');
+
+  const cpuDomBoard = document
+    .getElementById('cpu-column')
+    .getElementsByClassName('board');
+
+  addListenerToCells(humanPlayer, humanDomBoard);
+  addListenerToCells(cpuPlayer, cpuDomBoard);
 }
 
 function startGame(humanPlayer, cpuPlayer) {
-  addTurnFollowListener('H', humanPlayer.getName());
-
   if (
     humanPlayer.getBoard().getShips().length === 5 &&
     cpuPlayer.getBoard().getShips().length === 5
   ) {
-    const humanDomBoard = document
-      .getElementById('human-column')
-      .getElementsByClassName('board');
-
-    const cpuDomBoard = document
-      .getElementById('cpu-column')
-      .getElementsByClassName('board');
-
-    addListenerToCells(humanPlayer, humanDomBoard);
-    addListenerToCells(cpuPlayer, cpuDomBoard);
+    addTurnFollowListener(humanPlayer, cpuPlayer);
   }
 }
 export { loadMainAssests };
