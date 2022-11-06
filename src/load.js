@@ -136,6 +136,25 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   playArea.appendChild(cpuColumn);
 }
 
+function addListenerToCells(player, boardDom) {
+  console.log(player);
+  console.log(boardDom);
+  const child = boardDom[0].children;
+
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      child[i * 10 + j].addEventListener('click', () => {
+        console.log(
+          player.getName(),
+          i,
+          j,
+          player.getBoard().getCoordinate([j, i])
+        );
+      });
+    }
+  }
+}
+
 function startGame(humanPlayer, cpuPlayer) {
   if (
     humanPlayer.getBoard().getShips().length === 5 &&
@@ -145,15 +164,12 @@ function startGame(humanPlayer, cpuPlayer) {
       .getElementById('human-column')
       .getElementsByClassName('board');
 
-    const child = humanDomBoard[0].children;
+    const cpuDomBoard = document
+      .getElementById('cpu-column')
+      .getElementsByClassName('board');
 
-    for (let i = 0; i < 10; i++) {
-      for (let j = 0; j < 10; j++) {
-        child[i * 10 + j].addEventListener('click', () => {
-          console.log(i, j, humanPlayer.getBoard().getCoordinate([j, i]));
-        });
-      }
-    }
+    addListenerToCells(humanPlayer, humanDomBoard);
+    addListenerToCells(cpuPlayer, cpuDomBoard);
   }
 }
 export { loadMainAssests };
