@@ -137,8 +137,6 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
 }
 
 function addListenerToCells(player, boardDom) {
-  console.log(player);
-  console.log(boardDom);
   const child = boardDom[0].children;
 
   for (let i = 0; i < 10; i++) {
@@ -155,7 +153,27 @@ function addListenerToCells(player, boardDom) {
   }
 }
 
+function addTurnFollowListener(turn = 'H') {
+  const allCells = document.getElementsByClassName('cell');
+  console.log(allCells[0]);
+  for (let index = 0; index < allCells.length; index++) {
+    const cell = allCells[index];
+    cell.addEventListener('click', () => {
+      if (turn === 'H') {
+        console.log('CPUs turn');
+        turn = 'C';
+      } else {
+        if (turn === 'C') {
+          console.log('Human turn');
+          turn = 'H';
+        }
+      }
+    });
+  }
+}
+
 function startGame(humanPlayer, cpuPlayer) {
+  let turn = 'H'; //H - human start. C - CPU start
   if (
     humanPlayer.getBoard().getShips().length === 5 &&
     cpuPlayer.getBoard().getShips().length === 5
@@ -168,8 +186,9 @@ function startGame(humanPlayer, cpuPlayer) {
       .getElementById('cpu-column')
       .getElementsByClassName('board');
 
-    addListenerToCells(humanPlayer, humanDomBoard);
-    addListenerToCells(cpuPlayer, cpuDomBoard);
+    addTurnFollowListener();
+    addListenerToCells(humanPlayer, humanDomBoard, turn);
+    addListenerToCells(cpuPlayer, cpuDomBoard, turn);
   }
 }
 export { loadMainAssests };
