@@ -44,32 +44,9 @@ function loadNamePrompt() {
       const cpuPlayer = Player('CPU', playerBoard);
 
       clearScreen();
-      const playArea = document.createElement('div');
-      playArea.id = 'play-area-wrap';
+      loadPlayArea(humanPlayer, cpuPlayer);
 
-      const playerColumn = document.createElement('div');
-      playerColumn.classList.add('play-column');
-
-      const cpuColumn = document.createElement('div');
-      cpuColumn.classList.add('play-column');
-
-      anchorDiv.appendChild(playArea);
-
-      const playerName = document.createElement('h1');
-      playerName.textContent = humanPlayer.getName();
-
-      playerColumn.appendChild(playerName);
-      playerColumn.appendChild(boardToDom(humanPlayer.getBoard()));
-
-      const cpuName = document.createElement('h1');
-      cpuName.textContent = cpuPlayer.getName();
-
-      cpuColumn.appendChild(cpuName);
-      cpuColumn.appendChild(boardToDom(cpuPlayer.getBoard()));
-
-      playArea.appendChild(playerColumn);
-      playArea.appendChild(cpuColumn);
-      console.log(playerBoard.toString());
+      startGame(humanPlayer, cpuPlayer);
     }
     e.preventDefault();
   });
@@ -131,4 +108,52 @@ function boardToDom(board) {
   return boardWrap;
 }
 
+function loadPlayArea(humanPlayer, cpuPlayer) {
+  const playArea = document.createElement('div');
+  playArea.id = 'play-area-wrap';
+
+  const playerColumn = document.createElement('div');
+  playerColumn.id = 'human-column';
+
+  const cpuColumn = document.createElement('div');
+  cpuColumn.id = 'cpu-column';
+
+  anchorDiv.appendChild(playArea);
+
+  const playerName = document.createElement('h1');
+  playerName.textContent = humanPlayer.getName();
+
+  playerColumn.appendChild(playerName);
+  playerColumn.appendChild(boardToDom(humanPlayer.getBoard()));
+
+  const cpuName = document.createElement('h1');
+  cpuName.textContent = cpuPlayer.getName();
+
+  cpuColumn.appendChild(cpuName);
+  cpuColumn.appendChild(boardToDom(cpuPlayer.getBoard()));
+
+  playArea.appendChild(playerColumn);
+  playArea.appendChild(cpuColumn);
+}
+
+function startGame(humanPlayer, cpuPlayer) {
+  if (
+    humanPlayer.getBoard().getShips().length === 5 &&
+    cpuPlayer.getBoard().getShips().length === 5
+  ) {
+    const humanDomBoard = document
+      .getElementById('human-column')
+      .getElementsByClassName('board');
+
+    const child = humanDomBoard[0].children;
+
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        child[i * 10 + j].addEventListener('click', () => {
+          console.log(i, j, humanPlayer.getBoard().getCoordinate([j, i]));
+        });
+      }
+    }
+  }
+}
 export { loadMainAssests };
