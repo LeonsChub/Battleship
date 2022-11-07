@@ -4,7 +4,7 @@ import { Ship } from './ship';
 import { TurnTracker } from './turnTracker';
 
 const anchorDiv = document.querySelector('#content');
-const tracker = TurnTracker('C');
+const tracker = TurnTracker('H');
 
 function loadMainAssests() {
   loadNamePrompt();
@@ -164,55 +164,32 @@ function addListenerToCells(boardDom, cpuPlayer, humanPlayer) {
         if (selfAttack) {
           alert('selfATTACK');
         } else {
-          switch (tracker.getTurn()) {
-            case 'H':
-              if (console.log(cpuPlayer.getBoard().getCoordinate([j, i]))) {
-                child[i * 10 + j].classList.add('ship');
-              }
-
-              if ((cpuPlayer.attackBoard[(i, j)], humanPlayer.getBoard())) {
-                child[i * 10 + j].classList.add('hit');
-                updateIndicator(humanPlayer.getName());
-              }
-
-              break;
-            case 'C':
-              if (humanPlayer.getBoard().getCoordinate([j, i])) {
-                child[i * 10 + j].classList.add('ship');
-              }
-
-              if (humanPlayer.attackBoard([i, j], cpuPlayer.getBoard())) {
-                child[i * 10 + j].classList.add('hit');
-                updateIndicator(humanPlayer.getName());
-              }
-
-              break;
-            default:
-              break;
+          if (cpuPlayer.getBoard().getCoordinate([j, i]) === 1) {
+            child[i * 10 + j].classList.add('ship');
           }
 
-          //          if (tracker.getTurn() === 'H') {
-          //            console.log(cpuPlayer.getBoard().toString());
-          //            let attackSucces = humanPlayer.attackBoard(
-          //              [i, j],
-          //              cpuPlayer.getBoard()
-          //            );
-          //            if (attackSucces) {
-          //              child[i * 10 + j].classList.add('hit');
-          //              updateIndicator(humanPlayer.getName());
-          //            }
-          //          }
-          //          if (tracker.getTurn() === 'C') {
-          //            console.log(humanPlayer.getBoard().toString());
-          //            let attackSuccess = cpuPlayer.attackBoard(
-          //             [i, j],
-          //              humanPlayer.getBoard()
-          //            );
-          //            if (attackSuccess) {
-          //              child[i * 10 + j].classList.add('hit');
-          //              updateIndicator(humanPlayer.getName());
-          //            }
-          //          }
+          if (
+            humanPlayer.attackBoard([i, j], cpuPlayer.getBoard()) ||
+            cpuPlayer.getBoard().getCoordinate([j, i]) >= 1
+          ) {
+            child[i * 10 + j].classList.add('hit');
+            updateIndicator('CPU');
+
+            let hitInfo = cpuPlayer.randAttack(humanPlayer.getBoard());
+            while (!hitInfo[0]) {
+              hitInfo = cpuPlayer.randAttack(humanPlayer.getBoard());
+            }
+
+            if (humanPlayer.getBoard().getCoordinate(hitInfo[1]) === 1) {
+              console.log(hitInfo[1], 'Chosen by cpu');
+              child[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add('ship');
+            }
+
+            child[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add('hit');
+            console.log(hitInfo[1]);
+
+            updateIndicator(humanPlayer.getName());
+          }
         }
       });
     }
@@ -223,14 +200,14 @@ function updateIndicator(name = 'Player 1') {
   const turnIndicator = document.getElementById('turn-indicator');
   if (tracker.getTurn() === 'H') {
     turnIndicator.textContent = name;
-  } else {
+  }
+  if (tracker.getTurn() === 'C') {
     turnIndicator.textContent = 'CPU';
   }
-
   tracker.nextTurn();
 }
 
-function startGame(humanPlayer, cpuPlayer, playerName) {
+function startGame(humanPlayer, cpuPlayer) {
   if (
     humanPlayer.getBoard().getShips().length === 5 &&
     cpuPlayer.getBoard().getShips().length === 5
@@ -243,10 +220,9 @@ function startGame(humanPlayer, cpuPlayer, playerName) {
       .getElementById('cpu-column')
       .getElementsByClassName('board');
 
-    addListenerToCells(humanDomBoard, cpuPlayer, humanPlayer);
     addListenerToCells(cpuDomBoard, cpuPlayer, humanPlayer);
 
-    updateIndicator(playerName);
+    updateIndicator(humanPlayer.getName());
   }
 }
 export { loadMainAssests };

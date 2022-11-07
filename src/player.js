@@ -28,9 +28,7 @@ const Player = (str, objBoard) => {
       y = coord[1];
     }
 
-    if (attackBoard([x, y], boardToAttack) === null) {
-      randAttack(boardToAttack);
-    }
+    return [attackBoard([x, y], boardToAttack), [x, y]];
   };
 
   const getBoard = () => {
