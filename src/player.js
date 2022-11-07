@@ -11,26 +11,6 @@ const Player = (str, objBoard) => {
     return true;
   };
 
-  const randAttack = (boardToAttack, coord = null) => {
-    /* coord parameter is purely for testing "ai" capabilites */
-    function getRandomInt(max) {
-      return Math.floor(Math.random() * max);
-    }
-
-    let x = undefined;
-    let y = undefined;
-
-    if (coord === null) {
-      x = getRandomInt(10);
-      y = getRandomInt(10);
-    } else {
-      x = coord[0];
-      y = coord[1];
-    }
-
-    return [attackBoard([x, y], boardToAttack), [x, y]];
-  };
-
   const getBoard = () => {
     return board;
   };
@@ -39,6 +19,6 @@ const Player = (str, objBoard) => {
     return name;
   };
 
-  return { attackBoard, getName, getBoard, randAttack };
+  return { attackBoard, getName, getBoard };
 };
 export { Player };

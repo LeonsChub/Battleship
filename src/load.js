@@ -5,6 +5,17 @@ import { TurnTracker } from './turnTracker';
 
 const anchorDiv = document.querySelector('#content');
 const tracker = TurnTracker('H');
+let randomPos = [];
+
+for (let i = 0; i < 10; i++) {
+  for (let j = 0; j < 10; j++) {
+    randomPos.push([i, j]);
+  }
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 function loadMainAssests() {
   loadNamePrompt();
@@ -167,23 +178,20 @@ function addListenerToCells(
 
           if (humanPlayer.getBoard().getCoordinate([j, i]) !== -1) {
             humanPlayer.attackBoard([j, i], cpuPlayer.getBoard());
-
             cpuCells[i * 10 + j].classList.add('hit');
             updateIndicator('CPU');
 
-            let hitInfo = cpuPlayer.randAttack(humanPlayer.getBoard());
-            while (!hitInfo[0]) {
-              hitInfo = cpuPlayer.randAttack(humanPlayer.getBoard());
-            }
+            const attackIndex = getRandomInt(randomPos.length);
+            const attackPos = randomPos.splice(attackIndex, 1)[0];
+            let y = attackPos[1];
+            let x = attackPos[0];
 
-            if (humanPlayer.getBoard().getCoordinate(hitInfo[1]) === 1) {
-              console.log(hitInfo[1], 'Chosen by cpu');
-              humanCells[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add(
+            if (humanPlayer.getBoard().getCoordinate([y, x]) === 1) {
+              humanCells[attackPos[0] * 10 + attackPos[1]].classList.add(
                 'ship'
               );
             }
-
-            humanCells[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add('hit');
+            humanCells[attackPos[0] * 10 + attackPos[1]].classList.add('hit');
 
             updateIndicator(humanPlayer.getName());
           }
