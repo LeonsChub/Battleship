@@ -186,9 +186,6 @@ function addListenerToCells(
             humanCells[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add('hit');
 
             updateIndicator(humanPlayer.getName());
-          } else {
-            console.log('ALREADY HIT');
-            console.log(humanPlayer.getBoard().toString());
           }
         }
       });
