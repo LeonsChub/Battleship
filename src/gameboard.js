@@ -134,6 +134,7 @@ const Gameboard = () => {
     recieveHit,
     allShipsSunk,
     getCoordinate,
+    blowCoordinate,
     toString,
   };
 };

@@ -148,31 +148,27 @@ function loadPlayArea(humanPlayer, cpuPlayer) {
   playerSplitWrap.appendChild(cpuColumn);
 }
 
-function addListenerToCells(boardDom, cpuPlayer, humanPlayer) {
-  const child = boardDom[0].children;
-  const manDOMain = document.getElementById('human-column');
-  const cpuDOMain = document.getElementById('cpu-column');
+function addListenerToCells(
+  humanBoardDom,
+  cpuBoardDom,
+  cpuPlayer,
+  humanPlayer
+) {
+  const humanCells = humanBoardDom[0].children;
+  const cpuCells = cpuBoardDom[0].children;
 
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
-      child[i * 10 + j].addEventListener('click', () => {
-        let selfAttack =
-          (manDOMain.contains(child[i * 10 + j]) &&
-            tracker.getTurn() === 'C') ||
-          (cpuDOMain.contains(child[i * 10 + j]) && tracker.getTurn() === 'H');
-
-        if (selfAttack) {
-          alert('selfATTACK');
-        } else {
+      cpuCells[i * 10 + j].addEventListener('click', () => {
+        {
           if (cpuPlayer.getBoard().getCoordinate([j, i]) === 1) {
-            child[i * 10 + j].classList.add('ship');
+            cpuCells[i * 10 + j].classList.add('ship');
           }
 
-          if (
-            humanPlayer.attackBoard([i, j], cpuPlayer.getBoard()) ||
-            cpuPlayer.getBoard().getCoordinate([j, i]) >= 1
-          ) {
-            child[i * 10 + j].classList.add('hit');
+          if (humanPlayer.getBoard().getCoordinate([j, i]) !== -1) {
+            humanPlayer.attackBoard([j, i], cpuPlayer.getBoard());
+
+            cpuCells[i * 10 + j].classList.add('hit');
             updateIndicator('CPU');
 
             let hitInfo = cpuPlayer.randAttack(humanPlayer.getBoard());
@@ -182,13 +178,17 @@ function addListenerToCells(boardDom, cpuPlayer, humanPlayer) {
 
             if (humanPlayer.getBoard().getCoordinate(hitInfo[1]) === 1) {
               console.log(hitInfo[1], 'Chosen by cpu');
-              child[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add('ship');
+              humanCells[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add(
+                'ship'
+              );
             }
 
-            child[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add('hit');
-            console.log(hitInfo[1]);
+            humanCells[hitInfo[1][0] * 10 + hitInfo[1][1]].classList.add('hit');
 
             updateIndicator(humanPlayer.getName());
+          } else {
+            console.log('ALREADY HIT');
+            console.log(humanPlayer.getBoard().toString());
           }
         }
       });
@@ -220,7 +220,7 @@ function startGame(humanPlayer, cpuPlayer) {
       .getElementById('cpu-column')
       .getElementsByClassName('board');
 
-    addListenerToCells(cpuDomBoard, cpuPlayer, humanPlayer);
+    addListenerToCells(humanDomBoard, cpuDomBoard, cpuPlayer, humanPlayer);
 
     updateIndicator(humanPlayer.getName());
   }

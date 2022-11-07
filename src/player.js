@@ -21,8 +21,8 @@ const Player = (str, objBoard) => {
     let y = undefined;
 
     if (coord === null) {
-      x = getRandomInt(9);
-      y = getRandomInt(9);
+      x = getRandomInt(10);
+      y = getRandomInt(10);
     } else {
       x = coord[0];
       y = coord[1];
