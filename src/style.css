@@ -100,3 +100,10 @@ form{
 	width: 80%;
 	margin-inline: auto;
 }
+.cell.hit{
+	background-color: darkgray;
+}
+
+.cell.ship.hit{
+	background-color: rgb(156, 19, 19);
+}

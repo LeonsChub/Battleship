@@ -3,15 +3,12 @@ const Player = (str, objBoard) => {
   const board = objBoard;
 
   const attackBoard = (coord, boardToAttack) => {
-    if (board !== boardToAttack) {
-      if (boardToAttack.getCoordinate(coord) !== -1) {
-        boardToAttack.recieveHit(coord);
-      } else {
-        return null;
-      }
+    if (boardToAttack.getCoordinate(coord) !== -1) {
+      boardToAttack.recieveHit(coord);
     } else {
-      return null;
+      return false;
     }
+    return true;
   };
 
   const randAttack = (boardToAttack, coord = null) => {
