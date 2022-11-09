@@ -140,6 +140,12 @@ form{
 
 	margin: auto;
 }
+#dragable-wrap .ship-wrap.horizontal{
+	flex-flow: row;
+}
+#dragable-wrap .ship-wrap.vertical{
+	flex-flow: column;
+}
 
 #dragable-wrap .ship-wrap.carrier{
 	width: 80%;

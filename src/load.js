@@ -80,6 +80,7 @@ function createShipDom(size) {
   shipWrap.setAttribute('draggable', true);
   shipWrap.classList.add('ship-wrap');
   shipWrap.classList.add('draggable');
+  shipWrap.classList.add('horizontal');
 
   const rootCell = document.createElement('div');
   rootCell.id = 'root-cell';
@@ -92,6 +93,28 @@ function createShipDom(size) {
   shipWrap.addEventListener('dragend', () => {
     shipWrap.classList.remove('dragging');
   });
+
+  shipWrap.addEventListener('click', () => {
+    let isHorizontal = shipWrap.classList.contains('horizontal');
+    switch (isHorizontal) {
+      case true:
+        shipWrap.classList.remove('horizontal');
+        shipWrap.classList.add('vertical');
+
+        break;
+
+      case false:
+        shipWrap.classList.remove('vertical');
+        shipWrap.classList.add('horizontal');
+
+        break;
+
+      default:
+        break;
+    }
+  });
+
+  shipWrap.setAttribute('length', size);
 
   switch (size) {
     case 5:
@@ -136,18 +159,53 @@ function loadPreGame() {
   const boardDom = boardToDom(blankBoard);
   boardDom.id = 'pregameBoard';
 
-  const cells = boardDom.querySelectorAll('.cell');
+  const domCells = boardDom.querySelectorAll('.cell');
+  let cells = [...Array(10)].map(() => Array(10));
+
+  for (let i = 0; i < 10; i++) {
+    const row = cells[i];
+    for (let j = 0; j < 10; j++) {
+      row[j] = domCells[i + j * 10];
+    }
+  }
+  console.log(cells);
 
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
-      const cell = cells[i * 10 + j];
+      const cell = cells[i][j];
 
       cell.addEventListener('dragover', () => {
-        cell.classList.add('highlight');
+        const ship = document.querySelector('.dragging');
+        const len = ship.getAttribute('length');
+
+        if (ship.classList.contains('horizontal')) {
+          for (let z = 0; z < len; z++) {
+            if (i + z < 10) {
+              cells[i + z][j].classList.add('highlight');
+            }
+          }
+        }
+        if (ship.classList.contains('vertical')) {
+          for (let z = 0; z < len; z++) {
+            cells[i][j - z].classList.add('highlight');
+          }
+        }
       });
 
       cell.addEventListener('dragleave', () => {
-        cell.classList.remove('highlight');
+        const ship = document.querySelector('.dragging');
+        const len = ship.getAttribute('length');
+
+        if (ship.classList.contains('horizontal')) {
+          for (let z = 0; z < len; z++) {
+            cells[i + z][j].classList.remove('highlight');
+          }
+        }
+        if (ship.classList.contains('vertical')) {
+          for (let z = 0; z < len; z++) {
+            cells[i][j - z].classList.remove('highlight');
+          }
+        }
       });
     }
   }
