@@ -18,6 +18,7 @@ function getRandomInt(max) {
 }
 
 function loadMainAssests() {
+  loadPreGame();
   loadNamePrompt();
 }
 
@@ -57,9 +58,9 @@ function loadNamePrompt() {
       const cpuPlayer = Player('CPU', playerBoard);
 
       clearScreen();
-      loadPlayArea(humanPlayer, cpuPlayer);
-
-      startGame(humanPlayer, cpuPlayer, nameInput.value);
+      loadPreGame(nameInput.value);
+      //loadPlayArea(humanPlayer, cpuPlayer);
+      //startGame(humanPlayer, cpuPlayer, nameInput.value);
     }
     e.preventDefault();
   });
@@ -72,6 +73,111 @@ function loadNamePrompt() {
 
   totalWrap.appendChild(form);
   anchorDiv.appendChild(totalWrap);
+}
+
+function createShipDom(size) {
+  const shipWrap = document.createElement('div');
+  shipWrap.setAttribute('draggable', true);
+  shipWrap.classList.add('ship-wrap');
+  shipWrap.classList.add('draggable');
+
+  const rootCell = document.createElement('div');
+  rootCell.id = 'root-cell';
+  rootCell.classList.add('cell');
+
+  shipWrap.addEventListener('dragstart', () => {
+    shipWrap.classList.add('dragging');
+  });
+
+  shipWrap.addEventListener('dragend', () => {
+    shipWrap.classList.remove('dragging');
+  });
+
+  switch (size) {
+    case 5:
+      shipWrap.classList.add('carrier');
+      break;
+
+    case 4:
+      shipWrap.classList.add('battleship');
+      break;
+
+    case 3:
+      shipWrap.classList.add('cruiser');
+      break;
+
+    case 2:
+      shipWrap.classList.add('submarine');
+      break;
+
+    default:
+      break;
+  }
+
+  for (let i = 0; i < size - 1; i++) {
+    let shipCell = document.createElement('div');
+    shipCell.classList.add('cell');
+    shipWrap.appendChild(shipCell);
+  }
+
+  shipWrap.appendChild(rootCell);
+
+  return shipWrap;
+}
+
+function loadPreGame() {
+  const introHeading = document.createElement('h1');
+  introHeading.id = 'intro-head';
+  introHeading.textContent = 'CHOOSE YOUR SHIPS ADMIRAL';
+
+  anchorDiv.appendChild(introHeading);
+
+  const blankBoard = Gameboard();
+  const boardDom = boardToDom(blankBoard);
+  boardDom.id = 'pregameBoard';
+
+  const cells = boardDom.querySelectorAll('.cell');
+
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      const cell = cells[i * 10 + j];
+
+      cell.addEventListener('dragover', () => {
+        cell.classList.add('highlight');
+      });
+
+      cell.addEventListener('dragleave', () => {
+        cell.classList.remove('highlight');
+      });
+    }
+  }
+
+  anchorDiv.appendChild(boardDom);
+
+  const dragableWrap = document.createElement('div');
+  dragableWrap.id = 'dragable-wrap';
+
+  const carrierWrap = document.createElement('div');
+  carrierWrap.appendChild(createShipDom(5));
+  dragableWrap.appendChild(carrierWrap);
+
+  const battleWrap = document.createElement('div');
+  battleWrap.appendChild(createShipDom(4));
+  dragableWrap.appendChild(battleWrap);
+
+  const cruiserWrap = document.createElement('div');
+  cruiserWrap.appendChild(createShipDom(4));
+  dragableWrap.appendChild(cruiserWrap);
+
+  const submarineWrap = document.createElement('div');
+  submarineWrap.appendChild(createShipDom(3));
+  dragableWrap.appendChild(submarineWrap);
+
+  const destroyerWrap = document.createElement('div');
+  destroyerWrap.appendChild(createShipDom(2));
+  dragableWrap.appendChild(destroyerWrap);
+
+  anchorDiv.appendChild(dragableWrap);
 }
 
 function clearScreen() {
@@ -230,4 +336,5 @@ function startGame(humanPlayer, cpuPlayer) {
     updateIndicator(humanPlayer.getName());
   }
 }
+
 export { loadMainAssests };
