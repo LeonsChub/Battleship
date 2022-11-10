@@ -180,9 +180,9 @@ form{
 }
 
 #pregameBoard .cell.highlight{
-	background-color: aquamarine;
+	background-color: rgb(92, 92, 92);
 }
 
-#pregameBoard .cell.invalid{
-	background-color:orangered;
+#pregameBoard .cell.occupied{
+	background-color:lightblue;
 }

@@ -147,6 +147,15 @@ function createShipDom(size) {
 
   return shipWrap;
 }
+function clearHighlightDom(cells) {
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      if (cells[i][j].classList.contains('highlight')) {
+        cells[i][j].classList.remove('highlight');
+      }
+    }
+  }
+}
 
 function loadPreGame() {
   const introHeading = document.createElement('h1');
@@ -156,7 +165,7 @@ function loadPreGame() {
   anchorDiv.appendChild(introHeading);
 
   const blankBoard = Gameboard();
-  const boardDom = boardToDom(blankBoard);
+  let boardDom = boardToDom(blankBoard);
   boardDom.id = 'pregameBoard';
 
   const domCells = boardDom.querySelectorAll('.cell');
@@ -168,7 +177,6 @@ function loadPreGame() {
       row[j] = domCells[i + j * 10];
     }
   }
-  console.log(cells);
 
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
@@ -217,6 +225,7 @@ function loadPreGame() {
 
       cell.addEventListener('drop', (e) => {
         e.preventDefault();
+        let shipPlaced = false;
         const domShip = document.querySelector('.dragging');
         const len = parseInt(domShip.getAttribute('length'));
 
@@ -224,21 +233,38 @@ function loadPreGame() {
           if (i + len - 1 < 10) {
             let orientation = 'x';
             const ship = Ship(len, orientation);
-            blankBoard.placeShip([i, j], ship);
+            if (blankBoard.placeShip([i, j], ship) === null) {
+              alert('CANNOT PLACE SHIP ON TOP OF SHIP');
+            } else {
+              shipPlaced = true;
+            }
           }
-
-          console.log(blankBoard.toString());
         }
 
         if (domShip.classList.contains('vertical')) {
           if (j - len + 1 < 10) {
             let orientation = 'y';
             const ship = Ship(len, orientation);
-            blankBoard.placeShip([i, j], ship);
+            if (blankBoard.placeShip([i, j], ship) === null) {
+              alert('CANNOT PLACE SHIP ON TOP OF SHIP');
+            } else {
+              shipPlaced = true;
+            }
           }
-
-          console.log(blankBoard.toString());
         }
+        if (shipPlaced) {
+          for (let z = 0; z < len; z++) {
+            if (domShip.classList.contains('horizontal')) {
+              cells[i + z][j].classList.add('occupied');
+            }
+            if (domShip.classList.contains('vertical')) {
+              cells[i][j - z].classList.add('occupied');
+            }
+          }
+        }
+
+        clearHighlightDom(cells);
+        console.log(blankBoard.toString());
       });
     }
   }
