@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&display=swap');
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -45,6 +47,9 @@ table {
 body{
 	box-sizing: border-box;
 	background-color: #f4ff81;
+}
+:root{
+	font-family: 'Oswald', sans-serif;
 }
 
 .total-wrap{
@@ -107,6 +112,12 @@ form{
 
 .cell.ship.hit{
 	background-color: rgb(156, 19, 19);
+}
+#intro-head{
+	width: fit-content;
+	margin-inline: auto;
+	font-size: 2em;
+	margin-block: 1em;
 }
 
 #pregameBoard{
@@ -189,4 +200,10 @@ form{
 
 #draggable-wrap .deactivated{
 	visibility:hidden;
+}
+
+#continueBtn{
+	font-family: 'Oswald', sans-serif;
+	width: fit-content;
+	margin-inline: auto;
 }

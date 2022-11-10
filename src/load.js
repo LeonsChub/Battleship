@@ -18,7 +18,6 @@ function getRandomInt(max) {
 }
 
 function loadMainAssests() {
-  loadPreGame();
   loadNamePrompt();
 }
 
@@ -37,7 +36,7 @@ function loadNamePrompt() {
   nameInput.setAttribute('name', 'name_input');
   nameInput.id = 'name_input';
   nameInput.required = true;
-  nameInput.setAttribute('pattern', '^[a-zA-Z]{4,}$');
+  nameInput.setAttribute('pattern', '^[A-z]{3,}$');
 
   const btn = document.createElement('button');
   btn.textContent = 'Next';
@@ -53,9 +52,9 @@ function loadNamePrompt() {
 
   form.addEventListener('submit', (e) => {
     if (nameInput.validity.valid) {
-      const playerBoard = populateBoard();
-      const humanPlayer = Player(nameInput.value, playerBoard);
-      const cpuPlayer = Player('CPU', playerBoard);
+      //const playerBoard = populateBoard();
+      //const humanPlayer = Player(nameInput.value, playerBoard);
+      //const cpuPlayer = Player('CPU', playerBoard);
 
       clearScreen();
       loadPreGame(nameInput.value);
@@ -157,10 +156,10 @@ function clearHighlightDom(cells) {
   }
 }
 
-function loadPreGame() {
+function loadPreGame(name) {
   const introHeading = document.createElement('h1');
   introHeading.id = 'intro-head';
-  introHeading.textContent = 'CHOOSE YOUR SHIPS ADMIRAL';
+  introHeading.textContent = `Place your ships admiral ${name}`;
 
   anchorDiv.appendChild(introHeading);
 
@@ -295,6 +294,12 @@ function loadPreGame() {
   draggableWrap.appendChild(destroyerWrap);
 
   anchorDiv.appendChild(draggableWrap);
+
+  const continueButton = document.createElement('button');
+  continueButton.textContent = 'Continue';
+  continueButton.id = 'continueBtn';
+
+  anchorDiv.appendChild(continueButton);
 }
 
 function clearScreen() {
@@ -312,7 +317,7 @@ function populateBoard() {
   playerBoard.placeShip([0, 2], carrier);
 
   battleship.ninteyDegrees();
-  playerBoard.placeShip([8, 2], battleship);
+  playerBoard.placeShip([8, 5], battleship);
 
   playerBoard.placeShip([1, 4], cruiser);
 
