@@ -115,8 +115,8 @@ form{
 	height: 20em;
 }
 
-#dragable-wrap{
-	width: 50vw;
+#draggable-wrap{
+	width: fit-content;
 	margin-inline: auto;
 	display: flex;
 	justify-content: space-around;
@@ -125,13 +125,13 @@ form{
 	background-color: cadetblue;
 	padding: 0.5em;
 }
-#dragable-wrap > div{
+#draggable-wrap > div{
 	width: 7rem;
 	height: 7rem;
 	background-color: rgb(255, 255, 255);
 }
 
-#dragable-wrap .ship-wrap{
+#draggable-wrap .ship-wrap{
 	height: 100%;
 
 	display: flex;
@@ -140,29 +140,29 @@ form{
 
 	margin: auto;
 }
-#dragable-wrap .ship-wrap.horizontal{
+#draggable-wrap .ship-wrap.horizontal{
 	flex-flow: row;
 }
-#dragable-wrap .ship-wrap.vertical{
+#draggable-wrap .ship-wrap.vertical{
 	flex-flow: column;
 }
 
-#dragable-wrap .ship-wrap.carrier{
+#draggable-wrap .ship-wrap.carrier{
 	width: 80%;
 }
 
-#dragable-wrap .ship-wrap.battleship{
+#draggable-wrap .ship-wrap.battleship{
 	width: 65%;
 }
 
-#dragable-wrap .ship-wrap.cruiser{
+#draggable-wrap .ship-wrap.cruiser{
 	width: 48%;
 }
-#dragable-wrap .ship-wrap.submarine{
+#draggable-wrap .ship-wrap.submarine{
 	width: 33%;
 }
 
-#dragable-wrap .cell{
+#draggable-wrap .cell{
 	width: 1rem;
 	height: 1rem;
 	margin-inline: auto;
@@ -185,4 +185,8 @@ form{
 
 #pregameBoard .cell.occupied{
 	background-color:lightblue;
+}
+
+#draggable-wrap .deactivated{
+	visibility:hidden;
 }

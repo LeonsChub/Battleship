@@ -261,40 +261,40 @@ function loadPreGame() {
               cells[i][j - z].classList.add('occupied');
             }
           }
+          domShip.classList.remove('draggable');
+          domShip.classList.add('deactivated');
         }
-
         clearHighlightDom(cells);
-        console.log(blankBoard.toString());
       });
     }
   }
 
   anchorDiv.appendChild(boardDom);
 
-  const dragableWrap = document.createElement('div');
-  dragableWrap.id = 'dragable-wrap';
+  const draggableWrap = document.createElement('div');
+  draggableWrap.id = 'draggable-wrap';
 
   const carrierWrap = document.createElement('div');
   carrierWrap.appendChild(createShipDom(5));
-  dragableWrap.appendChild(carrierWrap);
+  draggableWrap.appendChild(carrierWrap);
 
   const battleWrap = document.createElement('div');
   battleWrap.appendChild(createShipDom(4));
-  dragableWrap.appendChild(battleWrap);
+  draggableWrap.appendChild(battleWrap);
 
   const cruiserWrap = document.createElement('div');
   cruiserWrap.appendChild(createShipDom(4));
-  dragableWrap.appendChild(cruiserWrap);
+  draggableWrap.appendChild(cruiserWrap);
 
   const submarineWrap = document.createElement('div');
   submarineWrap.appendChild(createShipDom(3));
-  dragableWrap.appendChild(submarineWrap);
+  draggableWrap.appendChild(submarineWrap);
 
   const destroyerWrap = document.createElement('div');
   destroyerWrap.appendChild(createShipDom(2));
-  dragableWrap.appendChild(destroyerWrap);
+  draggableWrap.appendChild(destroyerWrap);
 
-  anchorDiv.appendChild(dragableWrap);
+  anchorDiv.appendChild(draggableWrap);
 }
 
 function clearScreen() {
