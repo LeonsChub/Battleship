@@ -295,11 +295,31 @@ function loadPreGame(name) {
 
   anchorDiv.appendChild(draggableWrap);
 
+  const btnWrap = document.createElement('div');
+  btnWrap.classList.add('btn-wrap');
   const continueButton = document.createElement('button');
   continueButton.textContent = 'Continue';
   continueButton.id = 'continueBtn';
 
-  anchorDiv.appendChild(continueButton);
+  continueButton.addEventListener('click', () => {
+    let ships = document
+      .getElementById('draggable-wrap')
+      .querySelectorAll('.deactivated');
+
+    if (ships.length === 5) {
+      console.log('Game starting');
+      const humanPlayer = Player(name, blankBoard);
+      const cpuPlayer = Player('CPU', blankBoard);
+
+      clearScreen();
+      startGame(humanPlayer, cpuPlayer);
+    } else {
+      alert('Please place all your ships on the board');
+    }
+  });
+
+  btnWrap.appendChild(continueButton);
+  anchorDiv.appendChild(btnWrap);
 }
 
 function clearScreen() {
