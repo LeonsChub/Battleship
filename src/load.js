@@ -176,18 +176,20 @@ function loadPreGame() {
 
       cell.addEventListener('dragover', () => {
         const ship = document.querySelector('.dragging');
-        const len = ship.getAttribute('length');
+        const len = parseInt(ship.getAttribute('length'));
 
         if (ship.classList.contains('horizontal')) {
           for (let z = 0; z < len; z++) {
-            if (i + z < 10) {
+            if (len - 1 + i < 10) {
               cells[i + z][j].classList.add('highlight');
             }
           }
         }
         if (ship.classList.contains('vertical')) {
           for (let z = 0; z < len; z++) {
-            cells[i][j - z].classList.add('highlight');
+            if (j - len + 1 >= 0) {
+              cells[i][j - z].classList.add('highlight');
+            }
           }
         }
       });
@@ -198,12 +200,16 @@ function loadPreGame() {
 
         if (ship.classList.contains('horizontal')) {
           for (let z = 0; z < len; z++) {
-            cells[i + z][j].classList.remove('highlight');
+            if (i + z < 10) {
+              cells[i + z][j].classList.remove('highlight');
+            }
           }
         }
         if (ship.classList.contains('vertical')) {
           for (let z = 0; z < len; z++) {
-            cells[i][j - z].classList.remove('highlight');
+            if (j - z >= 0) {
+              cells[i][j - z].classList.remove('highlight');
+            }
           }
         }
       });
