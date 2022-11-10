@@ -174,7 +174,8 @@ function loadPreGame() {
     for (let j = 0; j < 10; j++) {
       const cell = cells[i][j];
 
-      cell.addEventListener('dragover', () => {
+      cell.addEventListener('dragover', (e) => {
+        e.preventDefault();
         const ship = document.querySelector('.dragging');
         const len = parseInt(ship.getAttribute('length'));
 
@@ -196,7 +197,7 @@ function loadPreGame() {
 
       cell.addEventListener('dragleave', () => {
         const ship = document.querySelector('.dragging');
-        const len = ship.getAttribute('length');
+        const len = parseInt(ship.getAttribute('length'));
 
         if (ship.classList.contains('horizontal')) {
           for (let z = 0; z < len; z++) {
@@ -211,6 +212,32 @@ function loadPreGame() {
               cells[i][j - z].classList.remove('highlight');
             }
           }
+        }
+      });
+
+      cell.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const domShip = document.querySelector('.dragging');
+        const len = parseInt(domShip.getAttribute('length'));
+
+        if (domShip.classList.contains('horizontal')) {
+          if (i + len - 1 < 10) {
+            let orientation = 'x';
+            const ship = Ship(len, orientation);
+            blankBoard.placeShip([i, j], ship);
+          }
+
+          console.log(blankBoard.toString());
+        }
+
+        if (domShip.classList.contains('vertical')) {
+          if (j - len + 1 < 10) {
+            let orientation = 'y';
+            const ship = Ship(len, orientation);
+            blankBoard.placeShip([i, j], ship);
+          }
+
+          console.log(blankBoard.toString());
         }
       });
     }

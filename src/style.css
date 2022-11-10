@@ -182,3 +182,7 @@ form{
 #pregameBoard .cell.highlight{
 	background-color: aquamarine;
 }
+
+#pregameBoard .cell.invalid{
+	background-color:orangered;
+}

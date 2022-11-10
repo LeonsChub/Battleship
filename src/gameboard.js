@@ -56,8 +56,8 @@ const Gameboard = () => {
 
     if (ship.getOrientation() === 'y') {
       for (let index = 0; index < ship.getLen(); index++) {
-        checkArray.push(board[x + index][y]);
-        coordArray.push([y, x + index]);
+        checkArray.push(board[x - index][y]);
+        coordArray.push([x - index, y]);
       }
     }
     if (ship.getOrientation() === 'x') {
@@ -71,7 +71,7 @@ const Gameboard = () => {
       ships.push({ shipPointer: ship, coordinates: coordArray });
       if (ship.getOrientation() === 'y') {
         for (let index = 0; index < ship.getLen(); index++) {
-          board[x + index][y] = 1;
+          board[x - index][y] = 1;
         }
       }
       if (ship.getOrientation() === 'x') {
