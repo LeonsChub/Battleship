@@ -56,6 +56,9 @@ function loadNamePrompt() {
       //const humanPlayer = Player(nameInput.value, playerBoard);
       //const cpuPlayer = Player('CPU', playerBoard);
 
+      //console.log(humanPlayer.getBoard().toString());
+      //console.log(cpuPlayer.getBoard().toString());
+
       clearScreen();
       loadPreGame(nameInput.value);
       //loadPlayArea(humanPlayer, cpuPlayer);
@@ -173,7 +176,7 @@ function loadPreGame(name) {
   for (let i = 0; i < 10; i++) {
     const row = cells[i];
     for (let j = 0; j < 10; j++) {
-      row[j] = domCells[i + j * 10];
+      row[j] = domCells[i * 10 + j];
     }
   }
 
@@ -188,15 +191,15 @@ function loadPreGame(name) {
 
         if (ship.classList.contains('horizontal')) {
           for (let z = 0; z < len; z++) {
-            if (len - 1 + i < 10) {
-              cells[i + z][j].classList.add('highlight');
+            if (len - 1 + j < 10) {
+              cells[i][j + z].classList.add('highlight');
             }
           }
         }
         if (ship.classList.contains('vertical')) {
           for (let z = 0; z < len; z++) {
-            if (j - len + 1 >= 0) {
-              cells[i][j - z].classList.add('highlight');
+            if (i - len + 1 >= 0) {
+              cells[i - z][j].classList.add('highlight');
             }
           }
         }
@@ -208,15 +211,15 @@ function loadPreGame(name) {
 
         if (ship.classList.contains('horizontal')) {
           for (let z = 0; z < len; z++) {
-            if (i + z < 10) {
-              cells[i + z][j].classList.remove('highlight');
+            if (j + z < 10) {
+              cells[i][j + z].classList.remove('highlight');
             }
           }
         }
         if (ship.classList.contains('vertical')) {
           for (let z = 0; z < len; z++) {
-            if (j - z >= 0) {
-              cells[i][j - z].classList.remove('highlight');
+            if (i - z >= 0) {
+              cells[i - z][j].classList.remove('highlight');
             }
           }
         }
@@ -229,7 +232,7 @@ function loadPreGame(name) {
         const len = parseInt(domShip.getAttribute('length'));
 
         if (domShip.classList.contains('horizontal')) {
-          if (i + len - 1 < 10) {
+          if (j + len - 1 < 10) {
             let orientation = 'x';
             const ship = Ship(len, orientation);
             if (blankBoard.placeShip([i, j], ship) === null) {
@@ -241,7 +244,7 @@ function loadPreGame(name) {
         }
 
         if (domShip.classList.contains('vertical')) {
-          if (j - len + 1 < 10) {
+          if (i - len + 1 < 10) {
             let orientation = 'y';
             const ship = Ship(len, orientation);
             if (blankBoard.placeShip([i, j], ship) === null) {
@@ -254,10 +257,10 @@ function loadPreGame(name) {
         if (shipPlaced) {
           for (let z = 0; z < len; z++) {
             if (domShip.classList.contains('horizontal')) {
-              cells[i + z][j].classList.add('occupied');
+              cells[i][j + z].classList.add('occupied');
             }
             if (domShip.classList.contains('vertical')) {
-              cells[i][j - z].classList.add('occupied');
+              cells[i - z][j].classList.add('occupied');
             }
           }
           domShip.classList.remove('draggable');
@@ -312,6 +315,7 @@ function loadPreGame(name) {
       const cpuPlayer = Player('CPU', blankBoard);
 
       clearScreen();
+      loadPlayArea(humanPlayer, cpuPlayer);
       startGame(humanPlayer, cpuPlayer);
     } else {
       alert('Please place all your ships on the board');
@@ -334,17 +338,11 @@ function populateBoard() {
   const submarine = Ship(3, 'x');
   const destroyer = Ship(2, 'x');
 
-  playerBoard.placeShip([0, 2], carrier);
-
-  battleship.ninteyDegrees();
-  playerBoard.placeShip([8, 5], battleship);
-
-  playerBoard.placeShip([1, 4], cruiser);
-
-  playerBoard.placeShip([1, 6], submarine);
-  destroyer.ninteyDegrees();
-
-  playerBoard.placeShip([6, 5], destroyer);
+  playerBoard.placeShip([5, 0], carrier);
+  playerBoard.placeShip([4, 0], battleship);
+  playerBoard.placeShip([3, 0], cruiser);
+  playerBoard.placeShip([2, 0], submarine);
+  playerBoard.placeShip([1, 0], destroyer);
 
   return playerBoard;
 }
@@ -354,7 +352,7 @@ function boardToDom(board, drawShip = false) {
   boardWrap.classList.add('board');
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
-      const cellVal = board.getCoordinate([j, i]);
+      const cellVal = board.getCoordinate([i, j]);
       const cell = document.createElement('div');
       cell.classList.add('cell');
 
@@ -420,19 +418,19 @@ function addListenerToCells(
     for (let j = 0; j < 10; j++) {
       cpuCells[i * 10 + j].addEventListener('click', () => {
         {
-          if (cpuPlayer.getBoard().getCoordinate([j, i]) === 1) {
+          if (cpuPlayer.getBoard().getCoordinate([i, j]) === 1) {
             cpuCells[i * 10 + j].classList.add('ship');
           }
 
-          if (humanPlayer.getBoard().getCoordinate([j, i]) !== -1) {
-            humanPlayer.attackBoard([j, i], cpuPlayer.getBoard());
+          if (cpuPlayer.getBoard().getCoordinate([i, j]) !== -1) {
+            humanPlayer.attackBoard([i, j], cpuPlayer.getBoard());
             cpuCells[i * 10 + j].classList.add('hit');
             updateIndicator('CPU');
 
             const attackIndex = getRandomInt(randomPos.length);
             const attackPos = randomPos.splice(attackIndex, 1)[0];
-            let y = attackPos[1];
-            let x = attackPos[0];
+            let y = attackPos[0];
+            let x = attackPos[1];
 
             if (humanPlayer.getBoard().getCoordinate([y, x]) === 1) {
               humanCells[attackPos[0] * 10 + attackPos[1]].classList.add(

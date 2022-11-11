@@ -18,15 +18,15 @@ const Gameboard = () => {
   };
 
   const getCoordinate = (coord) => {
-    let y = coord[1];
-    let x = coord[0];
+    let y = coord[0];
+    let x = coord[1];
 
     return board[y][x];
   };
 
   const blowCoordinate = (coord) => {
-    let y = coord[1];
-    let x = coord[0];
+    let y = coord[0];
+    let x = coord[1];
 
     board[y][x] = -1;
   };
@@ -56,14 +56,14 @@ const Gameboard = () => {
 
     if (ship.getOrientation() === 'y') {
       for (let index = 0; index < ship.getLen(); index++) {
-        checkArray.push(board[x - index][y]);
-        coordArray.push([x - index, y]);
+        checkArray.push(board[y - index][x]);
+        coordArray.push([y - index, x]);
       }
     }
     if (ship.getOrientation() === 'x') {
       for (let index = 0; index < ship.getLen(); index++) {
-        checkArray.push(board[x][y + index]);
-        coordArray.push([y + index, x]);
+        checkArray.push(board[y][x + index]);
+        coordArray.push([y, x + index]);
       }
     }
 
@@ -71,12 +71,12 @@ const Gameboard = () => {
       ships.push({ shipPointer: ship, coordinates: coordArray });
       if (ship.getOrientation() === 'y') {
         for (let index = 0; index < ship.getLen(); index++) {
-          board[x - index][y] = 1;
+          board[y - index][x] = 1;
         }
       }
       if (ship.getOrientation() === 'x') {
         for (let index = 0; index < ship.getLen(); index++) {
-          board[x][y + index] = 1;
+          board[y][x + index] = 1;
         }
       }
     } else {
