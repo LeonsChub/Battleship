@@ -48,6 +48,7 @@ const Gameboard = () => {
   };
 
   const placeShip = (coord, ship) => {
+    console.log(coord);
     const x = coord[1];
     const y = coord[0];
 

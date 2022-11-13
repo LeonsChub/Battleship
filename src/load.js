@@ -266,6 +266,7 @@ function loadPreGame(name) {
           domShip.classList.remove('draggable');
           domShip.classList.add('deactivated');
         }
+        domShip.classList.remove('dragging');
         clearHighlightDom(cells);
       });
     }
@@ -311,6 +312,7 @@ function loadPreGame(name) {
 
     if (ships.length === 5) {
       console.log('Game starting');
+      generateRandomBoard();
       const humanPlayer = Player(name, blankBoard);
       const cpuPlayer = Player('CPU', blankBoard);
 
@@ -345,6 +347,23 @@ function populateBoard() {
   playerBoard.placeShip([1, 0], destroyer);
 
   return playerBoard;
+}
+
+function generateRandomBoard() {
+  const boardToReturn = Gameboard();
+
+  const carrier = Ship(5, 'x');
+  const battleship = Ship(4, 'x');
+  const cruiser = Ship(3, 'x');
+  const submarine = Ship(3, 'x');
+  const destroyer = Ship(2, 'x');
+
+  let x = getRandomInt(10);
+  let y = getRandomInt(10);
+  let o = getRandomInt(1);
+
+  console.log(boardToReturn.placeShip([9, 9], carrier));
+  console.log(boardToReturn.toString());
 }
 
 function boardToDom(board, drawShip = false) {
