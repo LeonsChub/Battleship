@@ -16,12 +16,24 @@ for (let i = 0; i < 10; i++) {
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
+function randomOrientation() {
+  const o = getRandomInt(2);
+  console.log(o);
+  switch (o) {
+    case 0:
+      return 'x';
+
+    default:
+      return 'y';
+  }
+}
 
 function loadMainAssests() {
   loadNamePrompt();
 }
 
 function loadNamePrompt() {
+  generateRandomBoard();
   const totalWrap = document.createElement('div');
   totalWrap.classList.add('total-wrap');
 
@@ -352,17 +364,53 @@ function populateBoard() {
 function generateRandomBoard() {
   const boardToReturn = Gameboard();
 
-  const carrier = Ship(5, 'x');
-  const battleship = Ship(4, 'x');
-  const cruiser = Ship(3, 'x');
-  const submarine = Ship(3, 'x');
-  const destroyer = Ship(2, 'x');
+  let o = randomOrientation();
+  const carrier = Ship(5, o);
+
+  o = randomOrientation();
+  const battleship = Ship(4, o);
+
+  o = randomOrientation();
+  const cruiser = Ship(3, o);
+
+  o = randomOrientation();
+  const submarine = Ship(3, o);
+
+  o = randomOrientation();
+  const destroyer = Ship(2, o);
+
+  const ships = [carrier, battleship, cruiser, submarine, destroyer];
 
   let x = getRandomInt(10);
   let y = getRandomInt(10);
-  let o = getRandomInt(1);
 
-  console.log(boardToReturn.placeShip([9, 9], carrier));
+  ships.forEach((ship) => {
+    while (!boardToReturn.placeShip([y, x], ship)) {
+      x = getRandomInt(10);
+      y = getRandomInt(10);
+    }
+  });
+
+  //while (!boardToReturn.placeShip([y, x], carrier)) {
+  //x = getRandomInt(10);
+  //y = getRandomInt(10);
+  //}
+  //while (!boardToReturn.placeShip([y, x], battleship)) {
+  //  x = getRandomInt(10);
+  //  y = getRandomInt(10);
+  //}
+  //while (!boardToReturn.placeShip([y, x], cruiser)) {
+  //  x = getRandomInt(10);
+  //  y = getRandomInt(10);
+  //}
+  //while (!boardToReturn.placeShip([y, x], submarine)) {
+  //  x = getRandomInt(10);
+  //  y = getRandomInt(10);
+  //}
+  //while (!boardToReturn.placeShip([y, x], destroyer)) {
+  //  x = getRandomInt(10);
+  //  y = getRandomInt(10);
+  //}
   console.log(boardToReturn.toString());
 }
 

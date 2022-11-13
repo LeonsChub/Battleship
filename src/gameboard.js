@@ -48,27 +48,34 @@ const Gameboard = () => {
   };
 
   const placeShip = (coord, ship) => {
-    console.log(coord);
     const x = coord[1];
     const y = coord[0];
 
     const checkArray = []; /*array meant check if a ship is alreadyPlaced */
     const coordArray = []; /*array meant to track ship coordinates */
 
+    let validChoice = false;
+
     if (ship.getOrientation() === 'y') {
-      for (let index = 0; index < ship.getLen(); index++) {
-        checkArray.push(board[y - index][x]);
-        coordArray.push([y - index, x]);
+      if (y - ship.getLen() + 1 >= 0) {
+        validChoice = true;
+        for (let index = 0; index < ship.getLen(); index++) {
+          checkArray.push(board[y - index][x]);
+          coordArray.push([y - index, x]);
+        }
       }
     }
     if (ship.getOrientation() === 'x') {
-      for (let index = 0; index < ship.getLen(); index++) {
-        checkArray.push(board[y][x + index]);
-        coordArray.push([y, x + index]);
+      if (x + ship.getLen() - 1 <= 9) {
+        validChoice = true;
+        for (let index = 0; index < ship.getLen(); index++) {
+          checkArray.push(board[y][x + index]);
+          coordArray.push([y, x + index]);
+        }
       }
     }
 
-    if (!checkArray.includes(1)) {
+    if (!checkArray.includes(1) & validChoice) {
       ships.push({ shipPointer: ship, coordinates: coordArray });
       if (ship.getOrientation() === 'y') {
         for (let index = 0; index < ship.getLen(); index++) {
@@ -81,8 +88,9 @@ const Gameboard = () => {
         }
       }
     } else {
-      return null;
+      return false;
     }
+    return true;
   };
 
   const recieveHit = (coord) => {
