@@ -45,8 +45,9 @@ table {
 }
 
 body{
-	box-sizing: border-box;
-	background-color: #f4ff81;
+	background-image: url(./Images/background.jpg);
+	background-position: center;
+	background-size: 100%;
 }
 :root{
 	font-family: 'Oswald', sans-serif;
@@ -59,16 +60,50 @@ body{
 	display: flex;
 	justify-content: center;
 
+	
+
 }
 form{
-	margin-top: 10%;
+	width: 35%;
 	display: flex;
 	flex-flow: column;
 	align-items: center;
+	justify-content: center;
 }
+
 .input-wrap{
+	width: 100%;
 	display: flex;
-	flex-flow: column;
+	flex-flow: row;
+	font-size: 1.5em;
+}
+.input-wrap > label{
+	margin-right: 0.5em;
+	color: white;
+}
+.input-wrap > input{
+	width: 100%;
+}
+.btn-wrap > button{
+	font-size: 1.2em;
+	padding: 0.5em;
+	font-weight:bold;
+
+	border: 3px solid blue;
+	background-color:white;
+	border-radius: 10px;
+	color: black;
+
+	cursor: pointer;
+}
+
+.btn-wrap > button:hover{
+	border: 3px solid white;
+	background-color: blue;
+	color: white;
+
+	-webkit-transition: color 1s;
+	-webkit-transition: border 1s;
 }
 .btn-wrap{
 	margin-block: 1rem;
@@ -94,18 +129,21 @@ form{
   gap: 0;
 }
 #play-area-wrap{
-	padding-top: 5vh;
+	width: 100vw;
+	height: 100vh;
+
 	display: flex;
 	flex-flow: column;
 
 	align-items: center;
+	justify-content: center;
 }
 
 #play-area-wrap > .split{
 	display: flex;
 	justify-content: space-between;
 
-	width: 80%;
+	width: 60%;
 	margin-inline: auto;
 }
 .cell.hit{
@@ -137,6 +175,8 @@ form{
 	margin-top: 24px;
 	background-color: cadetblue;
 	padding: 0.5em;
+
+	position: relative;
 }
 #draggable-wrap > div{
 	width: 7rem;
@@ -210,6 +250,7 @@ form{
 	width: fit-content;
 	margin-inline: auto;
 	font-size: 1.5em;
+	padding: 0.2em;
 
 	color: white;
 	background-color: navy;
@@ -221,8 +262,37 @@ form{
 	border: 4px solid navy;
 	background-color: lightblue;
 	color: black;
-	padding: 0.2em;
+	padding: 0.4em;
 
 	-webkit-transition: 1s color;
 	-webkit-transition: 1s border;
+}
+
+#reset-btn{
+	background-image: url(./Images/cancelLogo.svg);
+	background-position: center;
+	background-repeat: none;
+	background-size: 100%;
+	border-radius: 100%;
+
+	border: 2px solid black;
+
+	position: relative;
+	width: 36px;
+	height: 36px;
+
+	margin-left: 8px;
+
+	right: 0;
+
+	align-self: center;
+
+	cursor: pointer;
+
+}
+
+#reset-btn:hover{
+	border: 0;
+	background-image: url(./Images/cancel-white.svg);
+	background-color: black;
 }

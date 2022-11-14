@@ -1,10 +1,8 @@
 import { Player } from './player';
 import { Gameboard } from './gameboard';
 import { Ship } from './ship';
-import { TurnTracker } from './turnTracker';
 
 const anchorDiv = document.querySelector('#content');
-const tracker = TurnTracker('H');
 let randomPos = [];
 
 for (let i = 0; i < 10; i++) {
@@ -309,6 +307,15 @@ function loadPreGame(name) {
   destroyerWrap.appendChild(createShipDom(2));
   draggableWrap.appendChild(destroyerWrap);
 
+  const resetButton = document.createElement('button');
+  resetButton.id = 'reset-btn';
+  draggableWrap.append(resetButton);
+
+  resetButton.addEventListener('click', () => {
+    clearScreen();
+    loadPreGame(name);
+  });
+
   anchorDiv.appendChild(draggableWrap);
 
   const btnWrap = document.createElement('div');
@@ -323,10 +330,9 @@ function loadPreGame(name) {
       .querySelectorAll('.deactivated');
 
     if (ships.length === 5) {
-      console.log('Game starting');
-      generateRandomBoard();
+      const randBoard = generateRandomBoard();
       const humanPlayer = Player(name, blankBoard);
-      const cpuPlayer = Player('CPU', blankBoard);
+      const cpuPlayer = Player('CPU', randBoard);
 
       clearScreen();
       loadPlayArea(humanPlayer, cpuPlayer);
@@ -342,23 +348,6 @@ function loadPreGame(name) {
 
 function clearScreen() {
   anchorDiv.innerHTML = '';
-}
-
-function populateBoard() {
-  const playerBoard = Gameboard();
-  const carrier = Ship(5, 'x');
-  const battleship = Ship(4, 'x');
-  const cruiser = Ship(3, 'x');
-  const submarine = Ship(3, 'x');
-  const destroyer = Ship(2, 'x');
-
-  playerBoard.placeShip([5, 0], carrier);
-  playerBoard.placeShip([4, 0], battleship);
-  playerBoard.placeShip([3, 0], cruiser);
-  playerBoard.placeShip([2, 0], submarine);
-  playerBoard.placeShip([1, 0], destroyer);
-
-  return playerBoard;
 }
 
 function generateRandomBoard() {
@@ -391,27 +380,8 @@ function generateRandomBoard() {
     }
   });
 
-  //while (!boardToReturn.placeShip([y, x], carrier)) {
-  //x = getRandomInt(10);
-  //y = getRandomInt(10);
-  //}
-  //while (!boardToReturn.placeShip([y, x], battleship)) {
-  //  x = getRandomInt(10);
-  //  y = getRandomInt(10);
-  //}
-  //while (!boardToReturn.placeShip([y, x], cruiser)) {
-  //  x = getRandomInt(10);
-  //  y = getRandomInt(10);
-  //}
-  //while (!boardToReturn.placeShip([y, x], submarine)) {
-  //  x = getRandomInt(10);
-  //  y = getRandomInt(10);
-  //}
-  //while (!boardToReturn.placeShip([y, x], destroyer)) {
-  //  x = getRandomInt(10);
-  //  y = getRandomInt(10);
-  //}
   console.log(boardToReturn.toString());
+  return boardToReturn;
 }
 
 function boardToDom(board, drawShip = false) {
@@ -437,11 +407,6 @@ function boardToDom(board, drawShip = false) {
 function loadPlayArea(humanPlayer, cpuPlayer) {
   const playArea = document.createElement('div');
   playArea.id = 'play-area-wrap';
-
-  const turnHeading = document.createElement('h2');
-  turnHeading.innerHTML = '<span id = "turn-indicator"></span>s Turn.';
-
-  playArea.appendChild(turnHeading);
 
   const playerSplitWrap = document.createElement('div');
   playerSplitWrap.classList.add('split');
@@ -492,7 +457,6 @@ function addListenerToCells(
           if (cpuPlayer.getBoard().getCoordinate([i, j]) !== -1) {
             humanPlayer.attackBoard([i, j], cpuPlayer.getBoard());
             cpuCells[i * 10 + j].classList.add('hit');
-            updateIndicator('CPU');
 
             const attackIndex = getRandomInt(randomPos.length);
             const attackPos = randomPos.splice(attackIndex, 1)[0];
@@ -505,24 +469,23 @@ function addListenerToCells(
               );
             }
             humanCells[attackPos[0] * 10 + attackPos[1]].classList.add('hit');
-
-            updateIndicator(humanPlayer.getName());
+          }
+          if (cpuPlayer.getBoard().allShipsSunk()) {
+            alert(
+              'YOU DID IT YOU DEMOLISHED THE DUSHMANS THREATENING OUR GLORIOUS BOSNIAN MOTHERLAND'
+            );
+            clearScreen();
+            loadNamePrompt();
+          }
+          if (humanPlayer.getBoard().allShipsSunk()) {
+            alert('YOU HAVE DISGARCED OUT MOTHERLAND AND YOU SHALL PAY!');
+            clearScreen();
+            loadNamePrompt();
           }
         }
       });
     }
   }
-}
-
-function updateIndicator(name = 'Player 1') {
-  const turnIndicator = document.getElementById('turn-indicator');
-  if (tracker.getTurn() === 'H') {
-    turnIndicator.textContent = name;
-  }
-  if (tracker.getTurn() === 'C') {
-    turnIndicator.textContent = 'CPU';
-  }
-  tracker.nextTurn();
 }
 
 function startGame(humanPlayer, cpuPlayer) {
@@ -539,8 +502,6 @@ function startGame(humanPlayer, cpuPlayer) {
       .getElementsByClassName('board');
 
     addListenerToCells(humanDomBoard, cpuDomBoard, cpuPlayer, humanPlayer);
-
-    updateIndicator(humanPlayer.getName());
   }
 }
 
