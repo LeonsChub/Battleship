@@ -452,7 +452,6 @@ function addListenerToCells(
 
           //let coord = cpuPlayer.randAttack(humanPlayer.getBoard());
           let coord = smartAi.smartAttack();
-          console.log(coord);
           humanCells[coord.y * 10 + coord.x].classList.add('hit');
 
           if (cpuPlayer.getBoard().allShipsSunk()) {
