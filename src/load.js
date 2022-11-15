@@ -1,22 +1,17 @@
 import { Player } from './player';
 import { Gameboard } from './gameboard';
 import { Ship } from './ship';
+import { IntelligentHits } from './intelligentHits';
 
 const anchorDiv = document.querySelector('#content');
-let randomPos = [];
-
-for (let i = 0; i < 10; i++) {
-  for (let j = 0; j < 10; j++) {
-    randomPos.push([i, j]);
-  }
-}
+let smartAi;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
+
 function randomOrientation() {
   const o = getRandomInt(2);
-  console.log(o);
   switch (o) {
     case 0:
       return 'x';
@@ -31,7 +26,6 @@ function loadMainAssests() {
 }
 
 function loadNamePrompt() {
-  generateRandomBoard();
   const totalWrap = document.createElement('div');
   totalWrap.classList.add('total-wrap');
 
@@ -245,7 +239,7 @@ function loadPreGame(name) {
           if (j + len - 1 < 10) {
             let orientation = 'x';
             const ship = Ship(len, orientation);
-            if (blankBoard.placeShip([i, j], ship) === null) {
+            if (!blankBoard.placeShip([i, j], ship)) {
               alert('CANNOT PLACE SHIP ON TOP OF SHIP');
             } else {
               shipPlaced = true;
@@ -257,7 +251,7 @@ function loadPreGame(name) {
           if (i - len + 1 < 10) {
             let orientation = 'y';
             const ship = Ship(len, orientation);
-            if (blankBoard.placeShip([i, j], ship) === null) {
+            if (!blankBoard.placeShip([i, j], ship)) {
               alert('CANNOT PLACE SHIP ON TOP OF SHIP');
             } else {
               shipPlaced = true;
@@ -333,6 +327,7 @@ function loadPreGame(name) {
       const randBoard = generateRandomBoard();
       const humanPlayer = Player(name, blankBoard);
       const cpuPlayer = Player('CPU', randBoard);
+      smartAi = IntelligentHits(cpuPlayer, humanPlayer);
 
       clearScreen();
       loadPlayArea(humanPlayer, cpuPlayer);
@@ -379,8 +374,6 @@ function generateRandomBoard() {
       y = getRandomInt(10);
     }
   });
-
-  console.log(boardToReturn.toString());
   return boardToReturn;
 }
 
@@ -449,27 +442,19 @@ function addListenerToCells(
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       cpuCells[i * 10 + j].addEventListener('click', () => {
-        {
-          if (cpuPlayer.getBoard().getCoordinate([i, j]) === 1) {
-            cpuCells[i * 10 + j].classList.add('ship');
-          }
+        if (cpuPlayer.getBoard().getCoordinate([i, j]) === 1) {
+          cpuCells[i * 10 + j].classList.add('ship');
+        }
 
-          if (cpuPlayer.getBoard().getCoordinate([i, j]) !== -1) {
-            humanPlayer.attackBoard([i, j], cpuPlayer.getBoard());
-            cpuCells[i * 10 + j].classList.add('hit');
+        if (cpuPlayer.getBoard().getCoordinate([i, j]) !== -1) {
+          humanPlayer.attackBoard([i, j], cpuPlayer.getBoard());
+          cpuCells[i * 10 + j].classList.add('hit');
 
-            const attackIndex = getRandomInt(randomPos.length);
-            const attackPos = randomPos.splice(attackIndex, 1)[0];
-            let y = attackPos[0];
-            let x = attackPos[1];
+          //let coord = cpuPlayer.randAttack(humanPlayer.getBoard());
+          let coord = smartAi.smartAttack();
+          console.log(coord);
+          humanCells[coord.y * 10 + coord.x].classList.add('hit');
 
-            if (humanPlayer.getBoard().getCoordinate([y, x]) === 1) {
-              humanCells[attackPos[0] * 10 + attackPos[1]].classList.add(
-                'ship'
-              );
-            }
-            humanCells[attackPos[0] * 10 + attackPos[1]].classList.add('hit');
-          }
           if (cpuPlayer.getBoard().allShipsSunk()) {
             alert(
               'YOU DID IT YOU DEMOLISHED THE DUSHMANS THREATENING OUR GLORIOUS BOSNIAN MOTHERLAND'
