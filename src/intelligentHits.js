@@ -6,13 +6,12 @@ const IntelligentHits = (cpu, enemy) => {
   let seed;
   let inARowX = 0;
   let inARowY = 0;
-  let vertReturn = false;
 
   const smartAttack = () => {
     let result;
     if (attackHistory.length === 0) {
       // if No attacks have been made yet attack a random spot
-      result = player.attackBoard([5, 5], dushman.getBoard());
+      result = player.attackBoard([5, 9], dushman.getBoard());
       //result = player.randAttack(dushman.getBoard());
     } else {
       let lastEntry = attackHistory[0];
@@ -35,7 +34,8 @@ const IntelligentHits = (cpu, enemy) => {
               result = player.randAttack(dushman.getBoard());
             }
           }
-        } else if (inARowX === 0) {
+        }
+        if (inARowX === 0) {
           if (player.canAttackPos([lastEntry.y + 1, lastEntry.x])) {
             result = player.attackBoard(
               [lastEntry.y + 1, lastEntry.x],
@@ -63,6 +63,18 @@ const IntelligentHits = (cpu, enemy) => {
               [seed.y, seed.x - 1],
               dushman.getBoard()
             );
+          } else if (player.canAttackPos([seed.y + 1, seed.x])) {
+            result = player.attackBoard(
+              [seed.y + 1, seed.x],
+              dushman.getBoard()
+            );
+            inARowY++;
+          } else if (player.canAttackPos([seed.y - 1, seed.x])) {
+            result = player.attackBoard(
+              [seed.y - 1, seed.x],
+              dushman.getBoard()
+            );
+            inARowY++;
           } else {
             result = player.randAttack(dushman.getBoard());
           }
