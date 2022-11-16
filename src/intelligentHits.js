@@ -2,9 +2,11 @@ const IntelligentHits = (cpu, enemy) => {
   const player = cpu;
   const dushman = enemy;
   const attackHistory = [];
+
   let seed;
   let inARowX = 0;
   let inARowY = 0;
+  let vertReturn = false;
 
   const smartAttack = () => {
     let result;
@@ -66,7 +68,7 @@ const IntelligentHits = (cpu, enemy) => {
           }
         } else if (inARowY !== 0) {
           seed = attackHistory[inARowY + 2];
-          inARowY = 0;
+          inARowY = inARowY < 4 ? inARowY : 0;
           if (player.canAttackPos([seed.y - 1, seed.x])) {
             result = player.attackBoard(
               [seed.y - 1, seed.x],
