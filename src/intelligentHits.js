@@ -2,54 +2,98 @@ const IntelligentHits = (cpu, enemy) => {
   const player = cpu;
   const dushman = enemy;
   const attackHistory = [];
-  let inARow = 0;
+  let seed;
+  let inARowX = 0;
+  let inARowY = 0;
 
   const smartAttack = () => {
     let result;
     if (attackHistory.length === 0) {
-      result = player.attackBoard([0, 2], dushman.getBoard());
+      result = player.attackBoard([0, 9], dushman.getBoard());
       //result = player.randAttack(dushman.getBoard());
     } else {
-      if (attackHistory[0].hasShip) {
-        if (player.canAttackPos([attackHistory[0].y, attackHistory[0].x + 1])) {
-          inARow++;
+      let lastEntry = attackHistory[0];
+
+      if (lastEntry.hasShip && inARowY === 0) {
+        if (player.canAttackPos([lastEntry.y, lastEntry.x + 1])) {
           result = player.attackBoard(
-            [attackHistory[0].y, attackHistory[0].x + 1],
+            [lastEntry.y, lastEntry.x + 1],
             dushman.getBoard()
           );
+          inARowX++;
         } else {
-          if (
-            player.canAttackPos([attackHistory[0].y, attackHistory[0].x - 1])
-          ) {
-            inARow++;
+          if (player.canAttackPos([lastEntry.y, lastEntry.x - 1])) {
             result = player.attackBoard(
-              [attackHistory[0].y, attackHistory[0].x - 1],
+              [lastEntry.y, lastEntry.x - 1],
               dushman.getBoard()
             );
+            inARowX++;
           } else {
             result = player.randAttack(dushman.getBoard());
           }
         }
       } else {
-        if (inARow < 5 && inARow !== 0) {
-          if (
-            player.canAttackPos([
-              attackHistory[inARow].y,
-              attackHistory[inARow].x - 1,
-            ])
-          ) {
+        if (inARowY !== 0 && lastEntry.hasShip) {
+          if (player.canAttackPos([lastEntry.y + 1, lastEntry.x])) {
             result = player.attackBoard(
-              [attackHistory[inARow].y, attackHistory[inARow].x - 1],
+              [lastEntry.y + 1, lastEntry.x],
               dushman.getBoard()
             );
+            inARowY++;
           }
-          inARow = 1;
+        } else if (inARowX !== 0) {
+          seed = attackHistory[inARowX];
+          inARowX = 0;
+          if (player.canAttackPos([seed.y, seed.x - 1])) {
+            inARowX++;
+            result = player.attackBoard(
+              [seed.y, seed.x - 1],
+              dushman.getBoard()
+            );
+          } else {
+            if (player.canAttackPos([seed.y - 1, seed.x])) {
+              inARowY++;
+              result = player.attackBoard(
+                [seed.y - 1, seed.x],
+                dushman.getBoard()
+              );
+            } else {
+              if (player.canAttackPos([seed.y + 1, seed.x])) {
+                inARowY++;
+                result = player.attackBoard(
+                  [seed.y + 1, seed.x],
+                  dushman.getBoard()
+                );
+              } else {
+                result = player.randAttack(dushman.getBoard());
+              }
+            }
+          }
         } else {
-          result = player.randAttack(dushman.getBoard());
+          if (attackHistory.length > 2) {
+            if (
+              attackHistory[0].y === attackHistory[1].y &&
+              Math.abs(attackHistory[0].x - attackHistory[1].x) === 2
+            ) {
+              seed = attackHistory[2];
+              result = player.attackBoard(
+                [seed.y + 1, seed.x],
+                dushman.getBoard()
+              );
+              inARowY++;
+            }
+          } else {
+            result = player.randAttack(dushman.getBoard());
+          }
         }
       }
     }
+    console.log(result);
+    if (seed !== undefined) {
+      seed = undefined;
+    }
     attackHistory.unshift(result);
+
     return result;
   };
 
