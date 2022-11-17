@@ -10,9 +10,7 @@ const IntelligentHits = (cpu, enemy) => {
   const smartAttack = () => {
     let result;
     if (attackHistory.length === 0) {
-      // if No attacks have been made yet attack a random spot
       result = player.attackBoard([5, 9], dushman.getBoard());
-      //result = player.randAttack(dushman.getBoard());
     } else {
       let lastEntry = attackHistory[0];
       if (lastEntry.hasShip) {
@@ -107,41 +105,6 @@ const IntelligentHits = (cpu, enemy) => {
           result = player.randAttack(dushman.getBoard());
         }
       }
-      //} else if (inARowX !== 0 && lastEntry.hasShip) {
-
-      //} else if (inARowY !== 0) {
-      //  seed = attackHistory[inARowY];
-      //  inARowY = 0;
-      //  if (player.canAttackPos([seed.y, seed.x - 1])) {
-      //    inARowX++;
-      //    result = player.attackBoard(
-      //      [seed.y, seed.x - 1],
-      //      dushman.getBoard()
-      //    );
-      //  } else {
-      //    if (player.canAttackPos([seed.y, seed.x + 1])) {
-      //      inARowX++;
-      //      result = player.attackBoard(
-      //        [seed.y, seed.x + 1],
-      //        dushman.getBoard()
-      //      );
-      //    } else {
-      //      if (player.canAttackPos([seed.y - 1, seed.x])) {
-      //        result = player.attackBoard(
-      //          [seed.y - 1, seed.x],
-      //          dushman.getBoard()
-      //        );
-      //      } else {
-      //        result = player.randAttack(dushman.getBoard());
-      //      }
-      //    }
-      //  }
-      //} else {
-      // else {
-      //  result = player.randAttack(dushman.getBoard());
-      //}
-      //}
-      //}
     }
     console.log(result);
     if (seed !== undefined) {
