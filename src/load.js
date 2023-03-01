@@ -456,13 +456,13 @@ function addListenerToCells(
 
           if (cpuPlayer.getBoard().allShipsSunk()) {
             alert(
-              'YOU DID IT YOU DEMOLISHED THE DUSHMANS THREATENING OUR GLORIOUS BOSNIAN MOTHERLAND'
+              'YOU WON'
             );
             clearScreen();
             loadNamePrompt();
           }
           if (humanPlayer.getBoard().allShipsSunk()) {
-            alert('YOU HAVE DISGARCED OUT MOTHERLAND AND YOU SHALL PAY!');
+            alert('YOU HAVE BEEN DEFEATED');
             clearScreen();
             loadNamePrompt();
           }
